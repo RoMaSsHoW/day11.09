@@ -163,20 +163,23 @@ namespace HomeWork.Api.Repositories
         public async Task<IEnumerable<PaymentDto>> GetMissingAttendanceAsync(DateTime date)
         {
             var sql = @"
-                select 
+                select
                     s.full_name as StudentName,
                     g.group_name as GroupName,
                     c.title as CourseTitle,
-                    a.lesson_date as PaidAt -- трюк: используем PaidAt под LessonDate
+                    a.lesson_date as PaidAt
                 from attendance a
                 join student_groups sg on sg.id = a.student_group_id
                 join students s on s.id = sg.student_id
                 join groups g on g.id = sg.group_id
                 join courses c on c.id = g.course_id
-                where a.is_present = false
-                and a.lesson_date = @date;";
+                where a.is_present = false and
+                      a.lesson_date = @date;";
 
-            return await _dbConnection.QueryAsync<PaymentDto>(sql, new { date });
+            var parameters = new DynamicParameters();
+            parameters.Add("date", date.Date, DbType.Date);
+
+            return await _dbConnection.QueryAsync<PaymentDto>(sql, parameters);
         }
     }
 }
