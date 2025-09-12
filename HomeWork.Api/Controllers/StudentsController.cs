@@ -20,5 +20,15 @@ namespace HomeWork.Api.Controllers
             var students = await _repository.GetStudentsWithGroupsAsync();
             return Ok(students);
         }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> Search(
+            [FromQuery] string? name, 
+            [FromQuery] string? course, 
+            [FromQuery] decimal? minPayment)
+        {
+            var res = await _repository.SearchStudentsAsync(name, course, minPayment);
+            return Ok(res);
+        }
     }
 }
