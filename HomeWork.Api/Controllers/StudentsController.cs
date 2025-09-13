@@ -14,6 +14,13 @@ namespace HomeWork.Api.Controllers
             _repository = repository;
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var student = await _repository.GetStudentsWithGroupsByIdAsync(id);
+            return Ok(student);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
